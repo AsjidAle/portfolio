@@ -3,7 +3,7 @@ name: Deploy Next.js to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - master  # Change if using a different branch
 
 permissions:
   contents: read
@@ -40,8 +40,8 @@ jobs:
           echo "Listing output files in 'out' directory..."
           ls -la out
           
-      - name: Upload Static Files (Fixed Version)
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload Static Files (Fixed)
+        uses: actions/upload-pages-artifact@v2  # ✅ Use v2 (latest stable version)
         with:
           path: out  # Next.js exports static files to `out`
 
@@ -51,9 +51,4 @@ jobs:
 
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deployment Success Message
-        run: echo "✅ Deployment completed! Check your site at https://asjidale.github.io/your-repo-name/"
+        uses: actions/deploy-pages@v2  # ✅ Correct version for deployment
