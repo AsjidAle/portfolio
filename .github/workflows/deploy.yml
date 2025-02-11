@@ -41,7 +41,7 @@ jobs:
           ls -la out
           
       - name: Upload Static Files (Fixed Version)
-        uses: actions/upload-pages-artifact@v4  # ✅ Updated to v4
+        uses: actions/upload-pages-artifact@v2
         with:
           path: out  # Next.js exports static files to `out`
 
