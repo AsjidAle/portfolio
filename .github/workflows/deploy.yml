@@ -39,10 +39,12 @@ jobs:
         run: |
           echo "Listing output files in 'out' directory..."
           ls -la out
-          
-      - name: Upload Static Files (Fixed)
-        uses: actions/upload-pages-artifact@v2  # ✅ Use v2 (latest stable version)
+
+      # ✅ FIX: Use the latest version of upload-artifact
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4  # ✅ Updated to v4
         with:
+          name: nextjs-build
           path: out  # Next.js exports static files to `out`
 
   deploy:
@@ -51,4 +53,7 @@ jobs:
 
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2  # ✅ Correct version for deployment
+        uses: actions/deploy-pages@v2  # ✅ Correct version for GitHub Pages
+
+      - name: Deployment Success Message
+        run: echo "✅ Deployment completed! Check your site at https://asjidale.github.io/your-repo-name/"
