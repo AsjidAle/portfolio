@@ -40,8 +40,8 @@ jobs:
           echo "Listing output files in 'out' directory..."
           ls -la out
           
-      - name: Upload Static Files
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload Static Files (Fixed Version)
+        uses: actions/upload-pages-artifact@v4  # ✅ Updated to v4
         with:
           path: out  # Next.js exports static files to `out`
 
@@ -56,4 +56,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deployment Success Message
-        run: echo "✅ Deployment completed! Check your site at https://your-username.github.io/your-repo-name/"
+        run: echo "✅ Deployment completed! Check your site at https://asjidale.github.io/your-repo-name/"
