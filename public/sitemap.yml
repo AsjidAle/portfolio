@@ -1,0 +1,16 @@
+sitemap:
+  - url: /
+    priority: 1.0
+    changefreq: weekly
+  - url: /#education
+    priority: 0.8
+    changefreq: monthly
+  - url: /#experience
+    priority: 0.8
+    changefreq: monthly
+  - url: /#projects
+    priority: 0.8
+    changefreq: monthly
+  - url: /contact
+    priority: 0.7
+    changefreq: yearly
