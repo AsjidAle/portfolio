@@ -58,8 +58,8 @@ const Testimonials: React.FC = () => {
 
                     <blockquote className="mt-4">
                       <p className="text-lg font-medium text-gray-900">
-                        "The team at Rareblocks has been phenomenal. The quality
-                        of work exceeded our expectations!"
+                        <q>The team at Rareblocks has been phenomenal. The quality
+                          of work exceeded our expectations!</q>
                       </p>
                     </blockquote>
                   </div>
@@ -98,8 +98,8 @@ const Testimonials: React.FC = () => {
 
                     <blockquote className="mt-4">
                       <p className="text-lg font-medium text-gray-900">
-                        "The team at Rareblocks has been phenomenal. The quality
-                        of work exceeded our expectations!"
+                        <q>The team at Rareblocks has been phenomenal. The quality
+                          of work exceeded our expectations!</q>
                       </p>
                     </blockquote>
                   </div>
@@ -138,8 +138,8 @@ const Testimonials: React.FC = () => {
 
                     <blockquote className="mt-4">
                       <p className="text-lg font-medium text-gray-900">
-                        "The team at Rareblocks has been phenomenal. The quality
-                        of work exceeded our expectations!"
+                        <q>The team at Rareblocks has been phenomenal. The quality
+                          of work exceeded our expectations!</q>
                       </p>
                     </blockquote>
                   </div>

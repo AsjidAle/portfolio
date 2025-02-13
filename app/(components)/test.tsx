@@ -73,7 +73,7 @@ const PortfolioModule: React.FC = () => {
               Service Reliability in Microservices: Leveraging (SLOs) for Enhanced User Experience
             </h3>
             <p className="mt-2 text-gray-700 text-justify mx-3 indent-5">
-              Building upon our previous discussion on service reliability, it's essential to delve deeper into the concept of Service Level Objectives (SLOs) and their pivotal role in maintaining system performance and user satisfaction.
+              Building upon our previous discussion on service reliability, it&apos;s essential to delve deeper into the concept of Service Level Objectives (SLOs) and their pivotal role in maintaining system performance and user satisfaction.
               SLOs are specific, measurable characteristics that define the desired performance and availability of a service. They serve as a bridge between the technical aspects of service reliability and the expectations of users and stakeholders. By setting clear SLOs,
               <a href="https://www.linkedin.com/pulse/service-reliability-microservices-leveraging-level-objectives-ali-iuzgf/?trackingId=X0fFCf57mg2u3Vdra7Y9EA%3D%3D" className="ml-2 text-blue-500 hover:underline" target="blank">See More</a></p>
           </div>
