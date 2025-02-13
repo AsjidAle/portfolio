@@ -66,12 +66,12 @@ const Projects: React.FC = () => {
                     </div>
                 )}
             </div>
-            <h2 className="text-center">
+            <h2 className="text-center" style={{ display: 'none' }}>
                 <a
                     href="#"
                     className="shadow-[0px_4px_10px_rgba(0,0,0,0.7)] inline-block bg-blue-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-blue-700 transition"
                 >
-                    {/* SEE DETAILED CV */}
+                    SEE DETAILED CV
                 </a>
             </h2>
 
