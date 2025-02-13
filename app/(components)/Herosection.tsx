@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link';
 
 const Herosection: React.FC = () => {
   return (
@@ -34,7 +35,8 @@ const Herosection: React.FC = () => {
             <p className="lg:w-[70%] w-full text-white text-md mt-4 md:text-lg 2xl:text-2xl font-[var(--font-inter)]">Experienced full-stack developer with
               expertise in Laravel, MERN, MySQL, MongoDb, Kafka, Docker, Kubernetes, Terraform, CI/CD pipeline, Next.js, React Native, Flutter experience.</p>
 
-            <button className="mt-6 px-4 py-2 text-lg lg:text-xl font-semibold text-white rounded-full 
+            <Link href={'/contact'}>
+              <button className="mt-6 px-4 py-2 text-lg lg:text-xl font-semibold text-white rounded-full 
                    w-[180px] 
                    bg-gradient-to-r from-[#FFA94D] to-[#FF6B6B] 
                    hover:from-[#FF512F] hover:to-[#DD2476] 
@@ -42,8 +44,9 @@ const Herosection: React.FC = () => {
                    shadow-lg shadow-[#FF6B6B]/50 
                    relative overflow-hidden before:absolute before:inset-0 before:bg-white/10 before:opacity-0 
                    hover:before:opacity-100 hover:before:animate-pulse">
-              Get In Touch
-            </button>
+                Get In Touch
+              </button>
+            </Link>
 
           </div>
 
