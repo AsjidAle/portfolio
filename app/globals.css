@@ -19,3 +19,12 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.text-xxl {
+  font-size: xx-large;
+}
+
+.text-160 {
+  font-size: 160%;
+}

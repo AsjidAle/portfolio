@@ -1,52 +1,45 @@
 "use client"
-import React, { useState } from 'react'
-import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 
 const Header: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname(); // Get the current route
+
+    const getLinkClass = (path: string) =>
+        pathname === path ? 'text-[#FFD700]' : 'text-gray-100 hover:text-[#FFD700]';
 
     return (
-        <header className="bg-gray-900 text-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center py-3">
-                    <div className='flex justify-between items-center'>
-                        <Image width={100} height={100} src={'/logo.png'} alt='Logo' />
-                        <div className="ms-2 text-2xl font-bold">Asjid Ali</div>
-                    </div>
-
-                    {/* Desktop Nav */}
-                    <nav className="hidden md:flex space-x-6">
-                        <a href="#" className="hover:text-gray-400">Home</a>
-                        <a href="#" className="hover:text-gray-400">About</a>
-                        <a href="#" className="hover:text-gray-400">Services</a>
-                        <a href="#" className="hover:text-gray-400">Contact</a>
-                    </nav>
-
-                    {/* Mobile Menu Button */}
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden focus:outline-none"
-                    >
-                        {isOpen ? (
-                            <i className="fas fa-times text-xl"></i>
-                        ) : (
-                            <i className="fas fa-bars text-xl"></i>
-                        )}
-                    </button>
-                </div>
-
-                {/* Mobile Nav */}
-                {isOpen && (
-                    <nav className="md:hidden flex flex-col space-y-4 py-4">
-                        <a href="#" className="hover:text-gray-400">Home</a>
-                        <a href="#" className="hover:text-gray-400">About</a>
-                        <a href="#" className="hover:text-gray-400">Services</a>
-                        <a href="#" className="hover:text-gray-400">Contact</a>
-                    </nav>
-                )}
+        <header className="lg:px-16 px-4 flex items-center justify-between py-4 shadow-lg bg-gray-800">
+            {/* Logo */}
+            <div className="font-black text-xxl text-[#FFD700]">
+                <Link href="/"> ASJID ALI</Link>
             </div>
+
+            {/* Navigation Tabs */}
+            <nav className="flex-1 flex justify-end">
+                <ul className="flex items-center space-x-6 text-bold text-base xl:text-lg">
+                    <li><Link className={getLinkClass('/')} href="/">Home</Link></li>
+
+                    {/* Fix: Ensure these links go to "/" first */}
+                    <li><Link className={getLinkClass('/education')} href="/#education">Education</Link></li>
+                    <li><Link className={getLinkClass('/experience')} href="/#experience">Experience</Link></li>
+                    <li><Link className={getLinkClass('/projects')} href="/#projects">Projects</Link></li>
+
+                    <li><Link className={getLinkClass('/contact')} href="/contact">Contact</Link></li>
+                </ul>
+            </nav>
+
+            {/* Light/Dark Mode Toggle */}
+            {/* <div>
+                <button className="p-2 rounded bg-gray-700 text-white hover:bg-gray-600">
+                    🌙/☀️
+                </button>
+            </div> */}
+
         </header>
     );
-}
+};
 
 export default Header;
+
