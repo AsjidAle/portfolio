@@ -11,18 +11,18 @@ const Footer: React.FC = () => {
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     
                     {/* Brand Name */}
-                    <div className="mb-4 md:mb-0 text-xxl text-[#FFD700] font-black">
+                    <div className="mb-4 md:mb-0 text-xxl text-blue-600 font-black">
                         <Link href="/"> ASJID ALI</Link>
                     </div>
 
                     {/* Navigation */}
                     <nav aria-label="Footer Navigation">
                         <ul className="flex flex-wrap space-x-6">
-                            <li><Link href="/" className="hover:text-[#FFD700] transition-colors">Home</Link></li>
-                            <li><Link href="/#projects" className="hover:text-[#FFD700] transition-colors">Projects</Link></li>
-                            <li><Link href="/#experience" className="hover:text-[#FFD700] transition-colors">Experience</Link></li>
-                            <li><Link href="/#education" className="hover:text-[#FFD700] transition-colors">Education</Link></li>
-                            <li><Link href="/contact" className="hover:text-[#FFD700] transition-colors">Contact</Link></li>
+                            <li><Link href="/" className="hover:text-blue-600 transition-colors">Home</Link></li>
+                            <li><Link href="/#projects" className="hover:text-blue-600 transition-colors">Projects</Link></li>
+                            <li><Link href="/#experience" className="hover:text-blue-600 transition-colors">Experience</Link></li>
+                            <li><Link href="/#education" className="hover:text-blue-600 transition-colors">Education</Link></li>
+                            <li><Link href="/contact" className="hover:text-blue-600 transition-colors">Contact</Link></li>
                         </ul>
                     </nav>
 
@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Follow Asjid Ali on Twitter"
-                            className="hover:text-[#FFD700] transition-colors text-2xl">
+                            className="hover:text-blue-600 transition-colors text-2xl">
                             <FaTwitter />
                         </a>
 
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Connect with Asjid Ali on LinkedIn"
-                            className="hover:text-[#FFD700] transition-colors text-2xl">
+                            className="hover:text-blue-600 transition-colors text-2xl">
                             <FaLinkedin />
                         </a>
 
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Chat with Asjid Ali on WhatsApp"
-                            className="hover:text-[#FFD700] transition-colors text-2xl">
+                            className="hover:text-green-600 transition-colors text-2xl">
                             <FaWhatsapp />
                         </a>
                     </div>

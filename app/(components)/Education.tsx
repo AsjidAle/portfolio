@@ -20,7 +20,7 @@ export default function TrainingSection() {
                             <strong>Specialization</strong> in Query Optimization using NLP in DDBMS
                         </li>
                         <li data-category="certification">
-                            <strong>Efficient Indexing & Query Optimization</strong> Certification
+                            <strong>AWS Certified Solutions Architect - Professional (SAP-C02) </strong>
                         </li>
                         <li data-category="certification">
                             <strong>Cloud Computing & Serverless Architecture</strong> Training
@@ -39,14 +39,15 @@ export default function TrainingSection() {
                 {/* Profile Image */}
                 <div className="flex justify-center">
                     <Image
-                        src="https://media.licdn.com/dms/image/v2/D4D03AQGJLZWCS9pnXA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1715525749415?e=1744848000&v=beta&t=A-HKRkj7R2dr7viL5k_JAM61NpfS3eIcUc6uotACqFU"
+                        src="/profile2.png"
                         alt="Profile Picture"
-                        width={300}
-                        height={350}
-                        className="mt-[6%] rounded-full shadow-[0px_4px_10px_rgba(0,0,0,0.7)] border border-3"
+                        width={400}
+                        height={400}
+                        className="mt-[6%] rounded-full shadow-[0px_4px_10px_rgba(0,0,0,0.7)] border border-3 aspect-square "
                         loading="lazy"
                         data-category="profile"
                     />
+
                 </div>
             </div>
         </section>

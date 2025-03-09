@@ -1,84 +1,147 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link';
+import React from "react";
+import { FaAws } from "react-icons/fa";
+import { GrOptimize } from "react-icons/gr";
+import { FaSearchengin, FaGears } from "react-icons/fa6";
+import { SiGooglesearchconsole } from "react-icons/si";
+import { BsFillFileEarmarkCodeFill } from "react-icons/bs";
+import { TbTargetArrow } from "react-icons/tb";
+import { IoIosRocket } from "react-icons/io";
+import Link from "next/link";
+import { PiNumberSixBold } from "react-icons/pi";
+import Image from "next/image";
+import AnimatedText from "./(subcomponents)/AnimatedText";
+import { MdOutlineBuildCircle } from "react-icons/md";
+import { MdCloudSync } from "react-icons/md";
+import MotionWrapper from "./(subcomponents)/MotionWrapper";
 
 const Herosection: React.FC = () => {
+  const techStack = [
+    { icon: MdOutlineBuildCircle, name: "Code from Scratch" },
+    { icon: SiGooglesearchconsole, name: "Website Maintinance" },
+    { icon: FaSearchengin, name: "SEO Optimization" },
+    { icon: GrOptimize, name: "Website Upgrade" },
+    { icon: MdCloudSync, name: "Cloud Automation" },
+    { icon: FaGears, name: "CI/CD Setup" },
+    { icon: FaAws, name: "AWS Expert" },
+    { icon: BsFillFileEarmarkCodeFill, name: "Code Base Optimization" },
+  ];
+
   return (
-    <>
-      <div className="w-full h-screen bg-black">
-        <div
-          className="absolute hidden sm:block md:top-20 sm:top-[8%] top-[10%] xl:top-40 
-                   xl:left-[30%] lg:left-[35%] md:right-[20%] sm:left-[18%] left-[10%] 
-                   max-w-full max-h-[80vh] overflow-hidden"
-        >
-          <Image
-            className="w-full h-auto"
-            src="https://techakim.com/sam/tg/7268/li/imgs/2.png"
-            alt="Image"
-            width={1920}
-            height={980}
-            layout="intrinsic"
-            priority
-          />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+          {/* Left Section */}
+          <MotionWrapper
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex-1 space-y-8"
+          >
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                <AnimatedText />
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Passionate developer specializing in building exceptional digital experiences.
+                Proficient in modern web technologies and cloud architecture with a focus on
+                scalable and maintainable solutions.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <Link href="/resume" target="_blank">
+                <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                  Resume
+                </button>
+              </Link>
+              <Link href="/contact">
+                <button className="px-6 py-3 bg-transparent border-2 border-blue-600 hover:bg-blue-600/20 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                  Contact Me
+                </button>
+              </Link>
+            </div>
+          </MotionWrapper>
+
+          {/* Right Section */}
+          <MotionWrapper
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex-1 space-y-8"
+          >
+            <div className="relative w-64 h-64 mx-auto">
+              <Image
+                src="/profile2.png"
+                alt="Professional headshot"
+                width={356}
+                height={456}
+                className="w-full h-full opacity-1 object-cover rounded-full shadow-2xl"
+                priority
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-6 max-w-sm mx-auto opacity-2">
+              <MotionWrapper
+                whileHover={{ scale: 1.1 }}
+                className="flex flex-col items-center justify-center p-4 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300 w-32"
+              >
+                <span className="flex items-center drop-shadow-[0_0_3px_rgba(255,255,255,1)] text-nowrap text-white gap-[1px]">
+                  <PiNumberSixBold className="text-4xl -mr-[2px]" />
+                  <span className="relative top-[5px] -ml-[4px]">Year +</span>
+                </span>
+
+                <span className="mt-2 text-sm text-center whitespace-normal break-words">
+                  Experience
+                </span>
+              </MotionWrapper>
+
+              <MotionWrapper
+                whileHover={{ scale: 1.1 }}
+                className="flex flex-col items-center justify-center p-4 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300 w-32"
+              >
+                180+
+                <TbTargetArrow
+                  size={35}
+                  className="text-3xl text-red-700 drop-shadow-[0px_0px_3px_rgba(255,255,255,1)] mb-3"
+                />
+
+                <span className="mt-2 text-sm text-nowrap">180+ Projects</span>
+              </MotionWrapper>
+
+              <MotionWrapper
+                whileHover={{ scale: 1.1 }}
+                className="flex flex-col items-center justify-center p-4 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300 w-32"
+              >
+                {/* <IoIosRocket className="text-3xl text-blue-500 mb-3" /> */}
+                <IoIosRocket className="text-3xl text-red-500 mb-3 bg-white p-1 rounded-full" />
+                <span className="mt-2 text-sm">13+ SaaS</span>
+              </MotionWrapper>
+            </div>
+          </MotionWrapper>
         </div>
-
-        <div className="lg:px-16 px-4 pb-4 h-full flex flex-col sm:flex-row sm:items-center mt-10 sm:mt-0 text-white">
-          <div className="w-full flex flex-col z-10">
-            <h4 className="text-lg font-semibold text-white xl:text-2xl">Hey There</h4>
-            <h1 className="2xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-semibold font-serif mt-2">
-              {"I'm "}
-              <span className="">Asjid Ali</span>
-            </h1>
-            {/* <h1 className="md:text-6xl sm:text-4xl text-3xl font-semibold font-serif">Abera</h1> */}
-            <h4 className="text-[#FFD700] mt-4 lg:text-2xl xl:3xl font-[var(--font-poppins)]">--FullStack Developer</h4>
-
-            <p className="lg:w-[70%] w-full text-white text-md mt-4 md:text-lg 2xl:text-2xl font-[var(--font-inter)]">Experienced full-stack developer with
-              expertise in Laravel, MERN, MySQL, MongoDb, Kafka, Docker, Kubernetes, Terraform, CI/CD pipeline, Next.js, React Native, Flutter experience.</p>
-
-            <Link href={'/contact'}>
-              <button className="mt-6 px-4 py-2 text-lg lg:text-xl font-semibold text-white rounded-full 
-                   w-[180px] 
-                   bg-gradient-to-r from-[#FFA94D] to-[#FF6B6B] 
-                   hover:from-[#FF512F] hover:to-[#DD2476] 
-                   hover:scale-110 active:scale-95 transition-all duration-300 
-                   shadow-lg shadow-[#FF6B6B]/50 
-                   relative overflow-hidden before:absolute before:inset-0 before:bg-white/10 before:opacity-0 
-                   hover:before:opacity-100 hover:before:animate-pulse">
-                Get In Touch
-              </button>
-            </Link>
-
-          </div>
-
-          <div
-            className="w-full flex sm:flex-col justify-center mt-4 sm:mt-0 sm:gap-8 gap-2 bg-gray-700/60 sm:bg-transparent p-4 rounded-lg z-10">
-            <div className="flex flex-col sm:items-end items-center">
-              <div className="inline-flex gap-1 items-center">
-                <h2 className="xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-semibold">6</h2>
-                <h2 className="text-[#FFD700] xl:text-6xl md:text-7xl sm:text-4xl text-3xl font-extrabold">+</h2>
-              </div>
-              <h4 className="text-sm sm:text-lg xl:text-2xl text-center">Years of Expireance</h4>
-            </div>
-            <div className="flex flex-col sm:items-end items-center">
-              <div className="inline-flex gap-1 items-center">
-                <h2 className="xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-semibold">115</h2>
-                <h2 className="text-[#FFD700] xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-extrabold">+</h2>
-              </div>
-              <h4 className="text-sm sm:text-lg xl:text-2xl text-center">Projects delivered</h4>
-            </div>
-            <div className="flex flex-col sm:items-end items-center">
-              <div className="inline-flex gap-1 items-center">
-                <h2 className="xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-semibold">13</h2>
-                <h2 className="text-[#FFD700] xl:text-8xl md:text-6xl sm:text-4xl text-3xl font-extrabold">+</h2>
-              </div>
-              <h4 className="text-sm sm:text-lg xl:text-2xl text-center">SaaS</h4>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </>
-  )
-}
+
+      <MotionWrapper
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="flex-1 flex justify-center items-center"
+      >
+        <div className="grid grid-cols-8 gap-5 w-full max-w-5xl mx-auto mt-10">
+          {techStack.map((tech) => (
+            <MotionWrapper
+              key={tech.name}
+              whileHover={{ scale: 1.3 }}
+              className="flex flex-col items-center justify-center w-full p-4 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300"
+            >
+              <tech.icon className="text-3xl text-blue-500" />
+              <span className="mt-2 text-sm">{tech.name}</span>
+            </MotionWrapper>
+          ))}
+        </div>
+      </MotionWrapper>
+    </div>
+  );
+};
 
 export default Herosection;

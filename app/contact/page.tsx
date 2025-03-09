@@ -10,41 +10,49 @@ export default function Page() {
         email: "",
         message: "",
     });
+    
+    const [errors, setErrors] = useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        message: false,
+    });
 
     const [isPending, startTransition] = useTransition();
     const [status, setStatus] = useState("");
 
-    // Handle input changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const validateField = (name, value) => {
+        if (name === "email") {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+        return value.trim() !== "";
     };
 
-    // Handle form submission
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     setStatus("Sending...");
+    // Handle input changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: !validateField(name, value) });
+    };
 
-    //     startTransition(async () => {
-    //         const res = await fetch("https://formsubmit.co/asjidale@gmail.com", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify(formData),
-    //         });
-
-    //         const data = await res.json();
-    //         setStatus(data.success ? "Email sent successfully!" : "Failed to send email.");
-    //     });
-    // };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const newErrors = {
+            firstName: !validateField("firstName", formData.firstName),
+            lastName: !validateField("lastName", formData.lastName),
+            email: !validateField("email", formData.email),
+            message: !validateField("message", formData.message),
+        };
+
+        setErrors(newErrors);
+        
+        if (Object.values(newErrors).some(error => error)) return;
+        
         setStatus("Sending...");
     
         const formEncodedData = new URLSearchParams();
-        formEncodedData.append("firstName", formData.firstName);
-        formEncodedData.append("lastName", formData.lastName);
-        formEncodedData.append("email", formData.email);
-        formEncodedData.append("message", formData.message);
+        Object.keys(formData).forEach(key => formEncodedData.append(key, formData[key]));
     
         startTransition(async () => {
             const res = await fetch("https://formsubmit.co/asjidale@gmail.com", {
@@ -52,9 +60,6 @@ export default function Page() {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formEncodedData.toString(),
             });
-    
-            const text = await res.text(); // Get response as text
-            console.log(text); // Log response for debugging
     
             if (res.ok) {
                 setStatus("Message sent successfully!");
@@ -67,37 +72,25 @@ export default function Page() {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="bg-white p-12 rounded-lg shadow-sm max-w-4xl w-full">
-                <h2 className="text-3xl font-bold mb-8 text-center">Contact Us</h2>
+                <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">Contact Us</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-2 gap-8">
-                        <div>
-                            <label className="block text-gray-700">
-                                First Name <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={formData.firstName}
-                                onChange={handleChange}
-                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FFD700] hover:border-[#FFD700]"
-                                placeholder="John"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-gray-700">
-                                Last Name <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FFD700] hover:border-[#FFD700]"
-                                placeholder="Doe"
-                                required
-                            />
-                        </div>
+                        {['firstName', 'lastName'].map((field) => (
+                            <div key={field}>
+                                <label className="block text-gray-700">
+                                    {field === "firstName" ? "First Name" : "Last Name"} <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name={field}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    className={`w-full p-4 border rounded-lg focus:outline-none text-gray-700 hover:border-blue-600 ${errors[field] ? "border-red-500" : "border-blue-600"}`}
+                                    placeholder={field === "firstName" ? "John" : "Doe"}
+                                    required
+                                />
+                            </div>
+                        ))}
                     </div>
                     <div className="mt-6">
                         <label className="block text-gray-700">
@@ -108,7 +101,7 @@ export default function Page() {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FFD700] hover:border-[#FFD700]"
+                            className={`w-full p-4 border rounded-lg text-gray-700 focus:outline-none hover:border-blue-600 ${errors.email ? "border-red-500" : "border-blue-600"}`}
                             placeholder="john@example.com"
                             required
                         />
@@ -121,7 +114,7 @@ export default function Page() {
                             name="message"
                             value={formData.message}
                             onChange={handleChange}
-                            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FFD700] hover:border-[#FFD700]"
+                            className={`w-full p-4 border rounded-lg text-gray-700 focus:outline-none hover:border-blue-600 ${errors.message ? "border-red-500" : "border-blue-600"}`}
                             rows={5}
                             placeholder="Type your message..."
                             required

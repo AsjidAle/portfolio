@@ -14,6 +14,7 @@ const PortfolioModule: React.FC = () => {
 
         {/* Articles Section */}
         <div className="space-y-6 col-span-2">
+          <h2 className="text-3xl">Articles and Case Studies</h2>
 
           <div className="p-1 bg-white rounded-lg shadow">
             <a href="https://www.linkedin.com/pulse/achieving-availability-through-observability-metrics-asjid-ali-gfbff/?trackingId=jg3FXK2C9fu8ds9ESLARzg%3D%3D" target="blank">
@@ -26,7 +27,7 @@ const PortfolioModule: React.FC = () => {
                 unoptimized
               />
             </a>
-            <h3 className="mx-3 mt-3 text-lg font-semibold">Achieving Availability: Through Observability Metrics</h3>
+            <h3 className="mx-3 mt-3 text-lg text-gray-800 font-semibold">Achieving Availability: Through Observability Metrics</h3>
             <p className="mt-2 text-gray-700 indent-5 text-justify mx-3">
               In today&apos;s digital landscape, ensuring 99.999% uptime, also known as five nines availability,
               has become a crucial goal for businesses. This level of uptime translates to just over five minutes
@@ -49,7 +50,7 @@ const PortfolioModule: React.FC = () => {
                 unoptimized
               />
             </a>
-            <h3 className="mt-4 text-lg font-semibold mx-3">The Evolution of Software Development: Why Microservices are the Future</h3>
+            <h3 className="mt-4 text-lg font-semibold text-gray-800 mx-3">The Evolution of Software Development: Why Microservices are the Future</h3>
             <p className="mt-2 text-gray-700 mx-3 indent-5 text-justify">
               In the fast-paced world of software development, where agility and innovation reign supreme, architecture plays a pivotal role in shaping success. Among the myriad architectural paradigms, microservices stand out as a transformative approach that is redefining how we build and scale systems. This week, let’s delve into why microservices are not just a trend but a necessity for modern development.
               A Brief Look Back: The Monolith Era
@@ -69,7 +70,7 @@ const PortfolioModule: React.FC = () => {
                 unoptimized
               />
             </a>
-            <h3 className="mx-3 mt-4 text-lg font-semibold">
+            <h3 className="mx-3 mt-4 text-lg text-gray-800 font-semibold">
               Service Reliability in Microservices: Leveraging (SLOs) for Enhanced User Experience
             </h3>
             <p className="mt-2 text-gray-700 text-justify mx-3 indent-5">

@@ -7,12 +7,12 @@ const Header: React.FC = () => {
     const pathname = usePathname(); // Get the current route
 
     const getLinkClass = (path: string) =>
-        pathname === path ? 'text-[#FFD700]' : 'text-gray-100 hover:text-[#FFD700]';
+        pathname === path ? 'text-blue-600' : 'text-gray-100 hover:text-blue-600';
 
     return (
         <header className="lg:px-16 px-4 flex items-center justify-between py-4 shadow-lg bg-gray-800">
             {/* Logo */}
-            <div className="font-black text-xxl text-[#FFD700]">
+            <div className="font-black text-xxl text-blue-600">
                 <Link href="/"> ASJID ALI</Link>
             </div>
 

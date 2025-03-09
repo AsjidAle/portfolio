@@ -40,10 +40,10 @@ const Projects: React.FC = () => {
 
     return (
         <>
-            <div className="bg-white dark:bg-gray-800 min-h-screen bg-gray-200h-full py-6 sm:py-8 lg:py-4" id='projects'>
+            <div className="bg-white min-h-screen bg-gray-200h-full py-6 sm:py-8 lg:py-4" id='projects'>
                 <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                     <section className="text-center py-12">
-                        <h2 className="text-2xl font-bold text-gray-800 lg:text-3xl dark:text-white" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
+                        <h2 className="text-2xl font-bold text-gray-800 lg:text-3xl" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
                             Some works carried out
                         </h2>
 
@@ -59,26 +59,26 @@ const Projects: React.FC = () => {
 
                 {selectedImage && (
                     <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
-                        <button className="absolute top-4 right-4 text-white text-3xl" onClick={closeModal}>×</button>
-                        <button className="absolute left-4 text-white text-3xl" onClick={prevImage}>&lt;</button>
+                        <button className="absolute top-4 right-4 text-white text-3xl bg-gray-500 w-10" onClick={closeModal}>×</button>
+                        <button className="absolute left-4 text-white text-3xl w-10 bg-gray-600 h-14" onClick={prevImage}>&lt;</button>
                         <Image src={selectedImage} alt="Selected" width={900} height={600} className="rounded-lg" />
-                        <button className="absolute right-4 text-white text-3xl" onClick={nextImage}>&gt;</button>
+                        <button className="absolute right-4 text-white text-3xl w-10 bg-gray-600 h-14" onClick={nextImage}>&gt;</button>
                     </div>
                 )}
             </div>
-            <h2 className="text-center" style={{ display: 'none' }}>
+            <h2 className="text-center bg-white">
                 <a
-                    href="#"
+                    href="/cv"
                     className="shadow-[0px_4px_10px_rgba(0,0,0,0.7)] inline-block bg-blue-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-blue-700 transition"
                 >
                     SEE DETAILED CV
                 </a>
             </h2>
 
-            <section className='pb-9 px-9' id='education'>
+            <section className='pb-9 px-9 bg-white text-black' id='education'>
 
                 <div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
-                    <h2 className="text-center text-2xl mt-10 mb-4 font-serif font-bold text-gray-800 lg:text-3xl dark:text-white" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
+                    <h2 className="text-center text-2xl pt-10 mb-4 font-serif font-bold text-gray-800 lg:text-3xl" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
                         Experience and services
                     </h2>
                 </div>
@@ -89,10 +89,10 @@ const Projects: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:gap-6 xl:gap-8">
                     <div>
                         <h2 className='my-5 font-serif' style={{ fontSize: '2rem' }}>Web Development</h2>
-                        <table className="min-w-full text-left text-black">
+                        <table className="min-w-full text-left">
                             <tbody className='space-y-10'>
                                 <tr>
-                                    <td><div className="flex items-center text-black gap-2"><SiJavascript className='text-yellow-500' /> JavaScript</div></td>
+                                    <td><div className="flex items-center gap-2"><SiJavascript className='text-yellow-500' /> JavaScript</div></td>
                                     <td><div className="flex items-center gap-2"><SiTypescript className='text-blue-600' /> TypeScript</div></td>
                                     <td><div className="flex items-center gap-2"><FaReact className='text-purple-800' /> React</div></td>
                                 </tr>
