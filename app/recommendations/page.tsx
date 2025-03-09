@@ -153,7 +153,7 @@ export default function RecommendationsPage() {
           >
             <div className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transition-transform">
               <FaQuoteLeft className="text-yellow-400 text-3xl mb-3" />
-              <p className="text-lg italic">"{rec.message}"</p>
+              <p className="text-lg italic">{rec.message}</p>
               <div className="mt-4">
                 <h3 className="text-xl font-semibold">{rec.name}</h3>
                 <p className="text-sm text-gray-400">{rec.position}</p>
