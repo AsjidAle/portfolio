@@ -1,8 +1,7 @@
-// components/RecommendationsPage.jsx
-import React from 'react';
+// app/components/RecommendationsPage.jsx
+import Image from 'next/image';
 
 const RecommendationsPage = () => {
-  // Sample recommendations data (you can replace this with your actual data)
   const recommendations = [
     {
       id: 1,
@@ -49,11 +48,13 @@ const RecommendationsPage = () => {
             >
               {/* Image */}
               <div className="relative h-64 overflow-hidden">
-                <img
+                <Image
                   src={rec.image}
                   alt={rec.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={rec.id === 1} // Priority for first image only
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
