@@ -15,7 +15,7 @@ export default function Home() {
       <Header />
       <Herosection />
       <Projects />
-      <Test />
+      {/* <Test /> */}
       <Education />
       {/* <Casestudy /> */}
       {/* <Articles /> */}
