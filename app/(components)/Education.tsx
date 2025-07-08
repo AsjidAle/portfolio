@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function TrainingSection() {
     return (
-        <section className="bg-white py-12 px-6" id='experience'>
+        <section className="bg-white py-12 px-6 scroll-mt-20" id='education'>
             <h2 className="text-3xl font-extrabold text-gray-700 mb-6 text-center" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
                 Professional Training & Certifications
             </h2>

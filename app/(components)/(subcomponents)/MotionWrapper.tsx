@@ -1,12 +1,12 @@
 "use client";
-import { motion, TargetAndTransition } from "framer-motion";
+import { motion, TargetAndTransition, Transition } from "framer-motion";
 import React from "react";
 
 interface MotionWrapperProps {
   children: React.ReactNode;
   initial?: TargetAndTransition;
   animate?: TargetAndTransition;
-  transition?: TargetAndTransition;
+  transition?: Transition;
   whileHover?: TargetAndTransition;
   className?: string;
 }

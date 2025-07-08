@@ -40,7 +40,7 @@ const Projects: React.FC = () => {
 
     return (
         <>
-            <div className="bg-white min-h-screen bg-gray-200h-full py-6 sm:py-8 lg:py-4" id='projects'>
+            <div className="bg-white min-h-screen bg-gray-200h-full py-6 sm:py-8 lg:py-4 scroll-mt-20" id='projects'>
                 <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
                     <section className="text-center py-12">
                         <h2 className="text-2xl font-bold text-gray-800 lg:text-3xl" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>
@@ -75,7 +75,7 @@ const Projects: React.FC = () => {
                 </a>
             </h2>
 
-            <section className='pb-9 px-9 bg-white text-black' id='education'>
+            <section className='pb-9 px-9 bg-white text-black scroll-mt-20' id='experience'>
 
                 <div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
                     <h2 className="text-center text-2xl pt-10 mb-4 font-serif font-bold text-gray-800 lg:text-3xl" style={{ textShadow: '0px 4px 10px rgba(0,0,0,0.7)' }}>

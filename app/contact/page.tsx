@@ -10,7 +10,7 @@ export default function Page() {
         email: "",
         message: "",
     });
-    
+
     const [errors, setErrors] = useState({
         firstName: false,
         lastName: false,
@@ -21,23 +21,22 @@ export default function Page() {
     const [isPending, startTransition] = useTransition();
     const [status, setStatus] = useState("");
 
-    const validateField = (name, value) => {
+    const validateField = (name: string, value: string): boolean => {
         if (name === "email") {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         }
         return value.trim() !== "";
     };
 
-    // Handle input changes
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setErrors({ ...errors, [name]: !validateField(name, value) });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
+
         const newErrors = {
             firstName: !validateField("firstName", formData.firstName),
             lastName: !validateField("lastName", formData.lastName),
@@ -46,21 +45,23 @@ export default function Page() {
         };
 
         setErrors(newErrors);
-        
+
         if (Object.values(newErrors).some(error => error)) return;
-        
+
         setStatus("Sending...");
-    
+
         const formEncodedData = new URLSearchParams();
-        Object.keys(formData).forEach(key => formEncodedData.append(key, formData[key]));
-    
+        Object.keys(formData).forEach(key => {
+            formEncodedData.append(key, formData[key as keyof typeof formData]);
+        });
+
         startTransition(async () => {
             const res = await fetch("https://formsubmit.co/asjidale@gmail.com", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formEncodedData.toString(),
             });
-    
+
             if (res.ok) {
                 setStatus("Message sent successfully!");
             } else {
@@ -68,14 +69,14 @@ export default function Page() {
             }
         });
     };
-    
+
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="bg-white p-12 rounded-lg shadow-sm max-w-4xl w-full">
                 <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">Contact Us</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-2 gap-8">
-                        {['firstName', 'lastName'].map((field) => (
+                        {(['firstName', 'lastName'] as Array<keyof typeof formData>).map((field) => (
                             <div key={field}>
                                 <label className="block text-gray-700">
                                     {field === "firstName" ? "First Name" : "Last Name"} <span className="text-red-500">*</span>
