@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
 
 const ResumePage = () => {
-  const pdfRef = useRef();
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const downloadPDF = () => {
     const element = pdfRef.current;
