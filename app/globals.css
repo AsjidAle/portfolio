@@ -20,11 +20,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 .text-xxl {
   font-size: xx-large;
 }
 
 .text-160 {
   font-size: 160%;
+}
+
+/* Custom override of Tailwind's .py-20 class */
+.py-20 {
+  padding-top: 2.8rem !important;
+  /* Optional: retain bottom padding or adjust as needed */
 }
