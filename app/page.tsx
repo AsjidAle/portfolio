@@ -6,7 +6,7 @@ import Herosection from "./(components)/Herosection"
 import Testimonials from "./(components)/Testimonials";
 import Contact from "./(components)/Contact";
 import Projects from "./(components)/Projects";
-import Test from "./(components)/test";
+// import Test from "./(components)/test";
 import Education from "./(components)/Education"
 
 export default function Home() {
