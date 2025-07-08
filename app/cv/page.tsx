@@ -1,12 +1,16 @@
 "use client";
 // components/CVPage.jsx
 import React, { useRef } from 'react';
-import html2pdf from 'html2pdf.js';
+import dynamic from 'next/dynamic';
+
+// Dynamically import html2pdf.js only on the client
+const html2pdf = typeof window !== "undefined" ? require("html2pdf.js") : null;
 
 const CVPage: React.FC = () => {
   const pdfRef = useRef<HTMLDivElement>(null);
 
   const downloadPDF = () => {
+    if (!html2pdf || !pdfRef.current) return;
     const element = pdfRef.current;
     const opt = {
       margin: 0.5,
