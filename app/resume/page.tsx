@@ -1,26 +1,11 @@
 "use client";
 // components/ResumePage.jsx
-import React, { useRef } from 'react';
-import html2pdf from 'html2pdf.js';
+import React from 'react';
 
 const ResumePage = () => {
-  const pdfRef = useRef<HTMLDivElement>(null);
-
-  const downloadPDF = () => {
-    const element = pdfRef.current;
-    const opt = {
-      margin: 0.5,
-      filename: 'Asjid_Ali_Resume.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-    };
-    html2pdf().set(opt).from(element).save();
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8" ref={pdfRef}>
+      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8">
         {/* Header */}
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Asjid Ali</h1>
@@ -101,15 +86,6 @@ const ResumePage = () => {
             React.js, Next.js, Laravel, Node.js, DevOps, Docker, Kubernetes, Jenkins, AWS, Terraform, Full-Stack Development, REST APIs, GraphQL, Python
           </p>
         </section>
-      </div>
-      {/* Download Button */}
-      <div className="max-w-3xl mx-auto mt-6 text-center">
-        <button
-          onClick={downloadPDF}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition-colors"
-        >
-          Download as PDF
-        </button>
       </div>
     </div>
   );
