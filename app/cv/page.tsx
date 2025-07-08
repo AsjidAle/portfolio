@@ -3,8 +3,8 @@
 import React, { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
 
-const CVPage = () => {
-  const pdfRef = useRef();
+const CVPage: React.FC = () => {
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const downloadPDF = () => {
     const element = pdfRef.current;
