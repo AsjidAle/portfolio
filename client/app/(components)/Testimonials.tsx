@@ -1,18 +1,19 @@
+// components/Testimonials.tsx
 "use client";
 import React, { useState, useEffect, ChangeEvent } from "react";
-import api from "../api"; // axios instance
+import Marquee from "react-fast-marquee";
+import api from "../api";
+import { useReviewModal } from "../context/ReviewModalContext";
+import { useRouter } from "next/navigation";
 
-interface BaseFormData {
+interface ReviewFormData {
   name: string;
   email: string;
   designation: string;
   company: string;
   feedback: string;
-}
-
-interface ReviewFormData extends BaseFormData {
-  projectTitle: string;
-  projectLink: string;
+  projectTitle?: string;
+  projectLink?: string;
 }
 
 type FormType = "review" | "recommendation";
@@ -26,7 +27,9 @@ interface ReviewData {
   projectTitle?: string;
   projectLink?: string;
   createdAt: string;
+  enabled: boolean;
 }
+
 interface RecommendationData {
   _id: string;
   name: string;
@@ -37,13 +40,17 @@ interface RecommendationData {
 }
 
 const Testimonials: React.FC = () => {
+  const router = useRouter();
+  const { open } = useReviewModal();
   const [isOpen, setIsOpen] = useState(false);
   const [formType, setFormType] = useState<FormType>("review");
+
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [recommendations, setRecommendations] = useState<RecommendationData[]>(
     []
   );
   const [loading, setLoading] = useState(true);
+  const [reviewsEnabled, setReviewsEnabled] = useState(true);
 
   const initialFormData: ReviewFormData = {
     name: "",
@@ -60,12 +67,21 @@ const Testimonials: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [reviewsRes, recsRes] = await Promise.all([
-          api.get("/review/getreviews"),
-          api.get("/recommendation/getrecommendations"),
+        const [stateRes, recsRes] = await Promise.all([
+          api.get("/getreviews-status"),
+          api.get("/getrecommendations"),
         ]);
-        setReviews(reviewsRes.data);
-        setRecommendations(recsRes.data);
+
+        const enabledResp =
+          typeof stateRes.data?.enabled === "boolean"
+            ? stateRes.data.enabled
+            : true;
+
+        setReviewsEnabled(enabledResp);
+        setReviews(
+          Array.isArray(stateRes.data?.reviews) ? stateRes.data.reviews : []
+        );
+        setRecommendations(Array.isArray(recsRes.data) ? recsRes.data : []);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
       } finally {
@@ -92,42 +108,6 @@ const Testimonials: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const endpoint = formType === "review" ? "/review" : "/recommendation";
-  //     const payload =
-  //       formType === "review"
-  //         ? formData
-  //         : {
-  //             name: formData.name,
-  //             email: formData.email,
-  //             designation: formData.designation,
-  //             company: formData.company,
-  //             feedback: formData.feedback,
-  //           };
-
-  //     const res = await api.post(endpoint, payload);
-  //     // console.log(res.data);
-
-  //     if (res.status === 201 || res.status === 200) {
-  //       alert(
-  //         `${
-  //           formType === "review" ? "Review" : "Recommendation"
-  //         } submitted successfully!`
-  //       );
-  //       if (formType === "review") {
-  //         setReviews((prev) => [res.data.review, ...prev]);
-  //       } else {
-  //         setRecommendations((prev) => [res.data.recommendation, ...prev]);
-  //       }
-  //       closeModal();
-  //     }
-  //   } catch (error) {
-  //     console.error("Submission Error:", error);
-  //     alert("Failed to submit.");
-  //   }
-  // };
-
   const handleSubmit = async () => {
     try {
       const endpoint = formType === "review" ? "/review" : "/recommendation";
@@ -143,7 +123,6 @@ const Testimonials: React.FC = () => {
             };
 
       const res = await api.post(endpoint, payload);
-
       if (res.status === 201 || res.status === 200) {
         alert("Please check your email to verify before your review appears.");
         closeModal();
@@ -152,6 +131,10 @@ const Testimonials: React.FC = () => {
       console.error("Submission Error:", error);
       alert("Failed to submit.");
     }
+  };
+
+  const handelClick = () => {
+    router.push("/reviews");
   };
 
   return (
@@ -164,53 +147,77 @@ const Testimonials: React.FC = () => {
         {loading ? (
           <p className="text-center text-gray-500">Loading testimonials...</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Reviews */}
-            <div>
-              <h3 className="text-2xl font-semibold text-blue-600 mb-4">
-                Client Reviews
-              </h3>
-              {reviews.length === 0 ? (
-                <p className="text-gray-500">No reviews yet.</p>
-              ) : (
-                <div className="space-y-5">
-                  {reviews.map((review) => (
-                    <div
-                      key={review._id}
-                      className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-blue-100"
-                    >
-                      <h4 className="text-lg font-bold text-gray-800">
-                        {review.name}
-                      </h4>
-                      <p className="text-sm text-gray-500">
-                        {review.designation} at {review.company}
-                      </p>
-                      {review.projectTitle && (
-                        <p className="text-sm mt-1 text-blue-600">
-                          Project: {review.projectTitle}{" "}
-                          {review.projectLink && (
-                            <a
-                              href={review.projectLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="underline"
-                            >
-                              View
-                            </a>
-                          )}
+          <>
+            {/* Reviews Section — only if globally enabled */}
+            {reviewsEnabled && (
+              <div className="mb-10">
+                <h3 className="text-2xl font-semibold text-blue-600 mb-4">
+                  Client Reviews
+                </h3>
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500">No reviews yet.</p>
+                ) : (
+                  <Marquee
+                    pauseOnHover
+                    direction="right"
+                    gradient={false}
+                    speed={50}
+                  >
+                    {reviews.map((review) => (
+                      <div
+                        key={review._id}
+                        onClick={() => open(review._id)}
+                        className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-blue-100 mx-3 w-80"
+                      >
+                        <h4 className="text-lg font-bold text-gray-800">
+                          {review.name}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          {review.designation} at {review.company}
                         </p>
-                      )}
-                      <p className="mt-3 text-gray-700">{review.feedback}</p>
-                      <p className="text-xs text-gray-400 mt-2">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
+                        {review.projectTitle && (
+                          <p className="text-sm mt-1 text-blue-600">
+                            Project: {review.projectTitle}{" "}
+                            {review.projectLink && (
+                              <a
+                                href={review.projectLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline"
+                              >
+                                View
+                              </a>
+                            )}
+                          </p>
+                        )}
+                        <p className="mt-3 text-gray-700">
+                          {review.feedback.slice(0, 30)}...
+                        </p>
+                        <p className="text-xs text-gray-400 mt-2">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
+                  </Marquee>
+                )}
+                <div className="mt-4 flex gap-4">
+                  <button
+                    onClick={handelClick}
+                    className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
+                  >
+                    See More Reviews
+                  </button>
+                  <button
+                    className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded shadow"
+                    onClick={() => openModal("review")}
+                  >
+                    Write a Review
+                  </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Recommendations */}
+            {/* Recommendations Section */}
             <div>
               <h3 className="text-2xl font-semibold text-green-600 mb-4">
                 Client Recommendations
@@ -218,11 +225,16 @@ const Testimonials: React.FC = () => {
               {recommendations.length === 0 ? (
                 <p className="text-gray-500">No recommendations yet.</p>
               ) : (
-                <div className="space-y-5">
+                <Marquee
+                  pauseOnHover
+                  direction="left"
+                  gradient={false}
+                  speed={50}
+                >
                   {recommendations.map((rec) => (
                     <div
                       key={rec._id}
-                      className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-green-100"
+                      className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-green-100 mx-3 w-80"
                     >
                       <h4 className="text-lg font-bold text-gray-800">
                         {rec.name}
@@ -236,27 +248,22 @@ const Testimonials: React.FC = () => {
                       </p>
                     </div>
                   ))}
-                </div>
+                </Marquee>
               )}
+              <div className="mt-4 flex gap-4">
+                <button className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
+                  See More Recommendations
+                </button>
+                <button
+                  className="bg-green-600 hover:bg-green-700 transition text-white px-4 py-2 rounded"
+                  onClick={() => openModal("recommendation")}
+                >
+                  Write a Recommendation
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         )}
-
-        {/* Buttons */}
-        <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-          <button
-            className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-lg shadow"
-            onClick={() => openModal("review")}
-          >
-            Write a Review
-          </button>
-          <button
-            className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-3 rounded-lg shadow"
-            onClick={() => openModal("recommendation")}
-          >
-            Write a Recommendation
-          </button>
-        </div>
       </div>
 
       {/* Modal */}
@@ -307,7 +314,7 @@ const Testimonials: React.FC = () => {
                 <input
                   type="text"
                   name="projectTitle"
-                  placeholder="Project Title"
+                  placeholder="Project Title (optional)"
                   value={formData.projectTitle}
                   className="w-full p-2 border rounded mb-2"
                   onChange={handleChange}

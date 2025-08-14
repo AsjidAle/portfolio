@@ -46,8 +46,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 min-h-screen w-64 bg-gray-900 text-white flex flex-col transform transition-transform duration-300 z-40
-        ${
+        className={`fixed md:static top-0 left-0 min-h-screen w-64 bg-gray-900 text-white flex flex-col transform transition-transform duration-300 z-40 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
@@ -62,8 +61,9 @@ export default function AdminLayout({
                 key={link.name}
                 href={link.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
-                  ${isActive ? "bg-gray-800" : "hover:bg-gray-800"}`}
+                className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+                  isActive ? "bg-gray-800" : "hover:bg-gray-800"
+                }`}
               >
                 <link.icon size={20} />
                 {link.name}
