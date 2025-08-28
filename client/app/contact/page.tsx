@@ -22,7 +22,7 @@ export default function Page() {
   });
 
   const [isPending, startTransition] = useTransition();
-  // const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("");
 
   const validateField = (name: string, value: string): boolean => {
     if (name === "email") {
@@ -50,10 +50,9 @@ export default function Page() {
     };
 
     setErrors(newErrors);
-
     if (Object.values(newErrors).some((error) => error)) return;
 
-    // setStatus("Sending...");
+    setStatus("Sending...");
 
     const formEncodedData = new URLSearchParams();
     Object.keys(formData).forEach((key) => {
@@ -61,33 +60,23 @@ export default function Page() {
     });
 
     startTransition(async () => {
-      // const res = await fetch("https://formsubmit.co/asjidale@gmail.com", {
-      const res = await api.post("http://localhost:1000/contact", {
-        formEncodedData,
-      });
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        message: "",
-      });
-      if (res.status === 201 || res.status === 200) {
-        toast.success("Message sent successfull1");
-      } else {
-        toast.error("Failed to send message.");
+      try {
+        await api.post("/contact", formEncodedData, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        });
+
+        setFormData({ firstName: "", lastName: "", email: "", message: "" });
+        // setStatus("Message sent successfully");
+        toast.success("Message sent successfully");
+      } catch (err) {
+        setStatus("Failed to send message");
+        toast.error("Failed to send message");
       }
     });
   };
 
   return (
     <div className="flex items-center relative overflow-hidden min-h-screen bg-black justify-center px-4 ">
-      {/* Your contact form or content here */}
-
-      {/* <Spotlight
-        className="-top-40 left-6 md:-top-20 md:left-60"
-        fill="black"
-      /> */}
-
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

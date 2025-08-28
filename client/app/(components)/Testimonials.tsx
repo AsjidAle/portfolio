@@ -28,6 +28,7 @@ interface ReviewData {
   projectLink?: string;
   createdAt: string;
   enabled: boolean;
+  media?: string[]; // <— show in popup
 }
 
 interface RecommendationData {
@@ -38,6 +39,16 @@ interface RecommendationData {
   feedback: string;
   createdAt: string;
 }
+
+const MAX_FILES = 5;
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "video/mp4",
+  "video/webm",
+];
 
 const Testimonials: React.FC = () => {
   const router = useRouter();
@@ -63,6 +74,10 @@ const Testimonials: React.FC = () => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+
+  // media selection state (for review form)
+  const [selectedMedia, setSelectedMedia] = useState<File[]>([]);
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +114,10 @@ const Testimonials: React.FC = () => {
   const closeModal = () => {
     setIsOpen(false);
     setFormData(initialFormData);
+    // reset media selection
+    setSelectedMedia([]);
+    mediaPreviews.forEach((url) => URL.revokeObjectURL(url));
+    setMediaPreviews([]);
   };
 
   const handleChange = (
@@ -108,24 +127,79 @@ const Testimonials: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // file input change
+  const handleMediaChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    if (files.length > MAX_FILES) {
+      alert(`You can upload up to ${MAX_FILES} files.`);
+      return;
+    }
+
+    const valid: File[] = [];
+    const previews: string[] = [];
+
+    for (const f of files) {
+      if (!ALLOWED_TYPES.includes(f.type)) {
+        alert(`${f.name} is not an allowed type.`);
+        continue;
+      }
+      if (f.size > MAX_SIZE) {
+        alert(`${f.name} is larger than 10MB.`);
+        continue;
+      }
+      valid.push(f);
+      previews.push(URL.createObjectURL(f));
+    }
+
+    setSelectedMedia(valid);
+    // clear previous previews
+    mediaPreviews.forEach((url) => URL.revokeObjectURL(url));
+    setMediaPreviews(previews);
+  };
+
   const handleSubmit = async () => {
     try {
       const endpoint = formType === "review" ? "/review" : "/recommendation";
-      const payload =
-        formType === "review"
-          ? formData
-          : {
-              name: formData.name,
-              email: formData.email,
-              designation: formData.designation,
-              company: formData.company,
-              feedback: formData.feedback,
-            };
 
-      const res = await api.post(endpoint, payload);
-      if (res.status === 201 || res.status === 200) {
-        alert("Please check your email to verify before your review appears.");
-        closeModal();
+      if (formType === "review") {
+        const fd = new FormData();
+        fd.append("name", formData.name);
+        fd.append("email", formData.email);
+        fd.append("designation", formData.designation);
+        fd.append("company", formData.company);
+        fd.append("feedback", formData.feedback);
+        if (formData.projectTitle)
+          fd.append("projectTitle", String(formData.projectTitle));
+        if (formData.projectLink)
+          fd.append("projectLink", String(formData.projectLink));
+        selectedMedia.forEach((file) => fd.append("media", file));
+
+        const res = await api.post(endpoint, fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        if (res.status === 201 || res.status === 200) {
+          alert(
+            "Please check your email to verify before your review appears."
+          );
+          closeModal();
+        }
+      } else {
+        // recommendations remain JSON submit
+        const payload = {
+          name: formData.name,
+          email: formData.email,
+          designation: formData.designation,
+          company: formData.company,
+          feedback: formData.feedback,
+        };
+        const res = await api.post(endpoint, payload);
+        if (res.status === 201 || res.status === 200) {
+          alert("Thank you! Your recommendation has been received.");
+          closeModal();
+        }
       }
     } catch (error) {
       console.error("Submission Error:", error);
@@ -167,7 +241,7 @@ const Testimonials: React.FC = () => {
                       <div
                         key={review._id}
                         onClick={() => open(review._id)}
-                        className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-blue-100 mx-3 w-80"
+                        className="bg-white shadow-lg hover:shadow-xl transition p-5 rounded-xl border border-blue-100 mx-3 w-80 cursor-pointer"
                       >
                         <h4 className="text-lg font-bold text-gray-800">
                           {review.name}
@@ -184,6 +258,7 @@ const Testimonials: React.FC = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="underline"
+                                onClick={(e) => e.stopPropagation()}
                               >
                                 View
                               </a>
@@ -327,6 +402,43 @@ const Testimonials: React.FC = () => {
                   className="w-full p-2 border rounded mb-2"
                   onChange={handleChange}
                 />
+
+                {/* Media input */}
+                <div className="mt-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Upload Images/Videos (up to 5, max 10MB each)
+                  </label>
+                  <input
+                    type="file"
+                    name="media"
+                    multiple
+                    accept=".jpg,.jpeg,.png,.webp,.mp4,.webm"
+                    onChange={handleMediaChange}
+                    className="w-full"
+                  />
+                  {/* Previews */}
+                  {mediaPreviews.length > 0 && (
+                    <div className="mt-2 grid grid-cols-3 gap-2">
+                      {mediaPreviews.map((src, i) =>
+                        selectedMedia[i]?.type.startsWith("video") ? (
+                          <video
+                            key={i}
+                            src={src}
+                            controls
+                            className="w-full h-24 object-cover rounded"
+                          />
+                        ) : (
+                          <img
+                            key={i}
+                            src={src}
+                            className="w-full h-24 object-cover rounded"
+                            alt={`media-${i}`}
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
               </>
             )}
 
