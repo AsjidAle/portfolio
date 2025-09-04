@@ -10,7 +10,9 @@ import {
   LogOut,
   Menu,
   X,
+  Pencil,
 } from "lucide-react";
+
 import { useState } from "react";
 
 export default function AdminLayout({
@@ -29,6 +31,11 @@ export default function AdminLayout({
       name: "Manage Recommendations",
       href: "/admin/toggle-recommendations",
       icon: Settings,
+    },
+    {
+      name: "Write blog",
+      href: "/admin/blog",
+      icon: Pencil,
     },
   ];
 

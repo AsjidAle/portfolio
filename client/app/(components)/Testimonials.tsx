@@ -294,7 +294,7 @@ const Testimonials: React.FC = () => {
 
             {/* Recommendations Section */}
             <div>
-              <h3 className="text-2xl font-semibold text-green-600 mb-4">
+              <h3 className="text-2xl flex items-center justify-center font-semibold text-green-600 mb-4">
                 Client Recommendations
               </h3>
               {recommendations.length === 0 ? (
