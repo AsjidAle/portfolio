@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FileImage, Loader2, Tag, Type, AlignLeft } from "lucide-react";
+import api from "../../api";
 import AdminLayout from "../AdminLayout";
 
 const AdminWriteBlog = () => {
@@ -16,10 +17,30 @@ const AdminWriteBlog = () => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      alert("✅ Blog Published Successfully");
-    }, 1500);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    if (image) formData.append("image", image);
+
+    try {
+      const res = await api.post("/admin-blog", formData);
+
+      // const data = await res.json();
+      if (res.status == 201) {
+        alert("✅ Blog Published Successfully");
+        setTitle("");
+        setContent("");
+        setTags("");
+        setImage(null);
+      } else {
+        alert("❌ Failed: ");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("❌ Something went wrong");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -34,7 +55,7 @@ const AdminWriteBlog = () => {
           {/* Page Heading */}
           <div className="mb-10 text-center">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              ✍️ Write a New Blog
+              Write a New Blog
             </h1>
             <p className="text-gray-500 mt-2">
               Share your thoughts, showcase projects, or publish updates
@@ -51,7 +72,7 @@ const AdminWriteBlog = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
                 <Type className="w-4 h-4 text-indigo-500" />
-                Blog Title
+                Title
               </label>
               <input
                 type="text"
@@ -67,7 +88,7 @@ const AdminWriteBlog = () => {
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
                 <AlignLeft className="w-4 h-4 text-indigo-500" />
-                Blog Content
+                Content
               </label>
               <textarea
                 placeholder="Write your blog content here..."
@@ -78,22 +99,6 @@ const AdminWriteBlog = () => {
                 required
               />
             </div>
-
-            {/* Tags */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                <Tag className="w-4 h-4 text-indigo-500" />
-                Tags (comma separated)
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. React, Next.js, Tailwind"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
-              />
-            </div>
-
             {/* Upload Image */}
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
@@ -132,7 +137,7 @@ const AdminWriteBlog = () => {
                     Publishing...
                   </>
                 ) : (
-                  "🚀 Publish Blog"
+                  "Publish Blog"
                 )}
               </button>
             </motion.div>

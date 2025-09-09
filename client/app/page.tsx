@@ -8,6 +8,7 @@ import Contact from "./(components)/Contact";
 import Projects from "./(components)/Projects";
 // import Test from "./(components)/test";
 import Education from "./(components)/Education";
+import Blogs from "./(components)/Blogs";
 // import Reviews from "./(components)/Reviews";
 // import Recommendations from "./(components)/Recommendations";
 
@@ -23,6 +24,7 @@ export default function Home() {
       {/* <Articles /> */}
       {/* <Reviews /> */}
       {/* <Recommendations />  */}
+      <Blogs />
       <Testimonials />
       <Contact />
       <Footer />
