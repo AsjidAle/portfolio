@@ -196,6 +196,7 @@ const Testimonials: React.FC = () => {
           feedback: formData.feedback,
         };
         const res = await api.post(endpoint, payload);
+        console.log(res.data.message);
         if (res.status === 201 || res.status === 200) {
           alert("Thank you! Your recommendation has been received.");
           closeModal();

@@ -15,6 +15,7 @@ export default function AdminDashboard() {
     const fetchTotalReviews = async () => {
       try {
         const res = await api.get("/totalreviews");
+        console.log(res);
         setTotalReviews(res.data.totalReviews);
       } catch (error) {
         console.error(error);
@@ -28,7 +29,8 @@ export default function AdminDashboard() {
     const fetchTotalRecommendations = async () => {
       try {
         const res = await api.get("/totalrecommendations");
-        setTotalRecommendations(res.data.totalRecommendations);
+        console.log(res);
+        setTotalRecommendations(res.data?.count);
       } catch (error) {
         console.error(error);
       }

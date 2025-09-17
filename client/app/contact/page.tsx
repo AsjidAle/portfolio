@@ -1,302 +1,169 @@
 "use client";
 
-import React, { useState } from "react";
-import { useTransition } from "react";
-// import { Spotlight } from "../(components)/ui/Spotlight";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
+import { Mail, User, MessageSquare } from "lucide-react";
 import api from "../api";
-export default function Page() {
-  const [formData, setFormData] = useState({
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+interface ContactFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+}
+
+export default function ContactPage() {
+  const [form, setForm] = useState<ContactFormData>({
     firstName: "",
     lastName: "",
     email: "",
     message: "",
   });
 
-  const [errors, setErrors] = useState({
-    firstName: false,
-    lastName: false,
-    email: false,
-    message: false,
-  });
-
-  const [isPending, startTransition] = useTransition();
-  const [status, setStatus] = useState("");
-
-  const validateField = (name: string, value: string): boolean => {
-    if (name === "email") {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-    return value.trim() !== "";
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: !validateField(name, value) });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
-    const newErrors = {
-      firstName: !validateField("firstName", formData.firstName),
-      lastName: !validateField("lastName", formData.lastName),
-      email: !validateField("email", formData.email),
-      message: !validateField("message", formData.message),
-    };
+    try {
+      const res = await api.post("http://localhost:1000/contact", form);
 
-    setErrors(newErrors);
-    if (Object.values(newErrors).some((error) => error)) return;
+      if (res.status !== 201)
+        throw new Error(res.data?.message || "Something went wrong");
 
-    setStatus("Sending...");
+      toast.success("✅ Message sent successfully!", {
+        position: "top-right",
+        theme: "dark",
+      });
 
-    const formEncodedData = new URLSearchParams();
-    Object.keys(formData).forEach((key) => {
-      formEncodedData.append(key, formData[key as keyof typeof formData]);
-    });
-
-    startTransition(async () => {
-      try {
-        await api.post("/contact", formEncodedData, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        });
-
-        setFormData({ firstName: "", lastName: "", email: "", message: "" });
-        // setStatus("Message sent successfully");
-        toast.success("Message sent successfully");
-      } catch (err) {
-        setStatus("Failed to send message");
-        toast.error("Failed to send message");
-      }
-    });
+      setForm({ firstName: "", lastName: "", email: "", message: "" });
+    } catch (err: any) {
+      toast.error("❌ " + err.message, {
+        position: "top-right",
+        theme: "dark",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center relative overflow-hidden min-h-screen bg-black justify-center px-4 ">
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className=" backdrop-blur-md relative z-10 p-12 rounded-2xl shadow-2xl max-w-4xl w-full border border-white/10"
-      >
-        <motion.h2
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-3xl font-bold mb-8 text-center text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text"
-        >
-          Contact Us
-        </motion.h2>
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black px-6 pt-20">
+      {/* Glow Effects */}
+      <div className="absolute top-20 left-20 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-20 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl" />
 
-        <form onSubmit={handleSubmit}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full max-w-2xl bg-gray-900/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-800"
+      >
+        <h1 className="text-3xl md:text-4xl font-extrabold text-center text-blue-500 mb-10">
+          Get in Touch
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* First + Last Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {(["firstName", "lastName"] as Array<keyof typeof formData>).map(
-              (field) => (
-                <motion.div
-                  key={field}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: field === "firstName" ? 0.4 : 0.5 }}
-                >
-                  <label className="block text-white mb-2">
-                    {field === "firstName" ? "First Name" : "Last Name"}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    className={`w-full bg-transparent border-0 border-b-2 text-white placeholder-gray-400 border-gray-600 focus:outline-none focus:border-blue-500 transition duration-300 py-2 ${
-                      errors[field] ? "border-red-500" : ""
-                    }`}
-                    placeholder={field === "firstName" ? "John" : "Doe"}
-                    required
-                  />
-                </motion.div>
-              )
-            )}
+            {["firstName", "lastName"].map((field, i) => (
+              <motion.div
+                key={field}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="relative"
+              >
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <input
+                  name={field}
+                  placeholder={
+                    field === "firstName" ? "First Name" : "Last Name"
+                  }
+                  value={form[field as keyof ContactFormData]}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-white placeholder-gray-400"
+                />
+              </motion.div>
+            ))}
           </div>
 
+          {/* Email */}
           <motion.div
-            className="mt-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
+            className="relative"
           >
-            <label className="block text-white mb-2">
-              Email <span className="text-red-500">*</span>
-            </label>
+            <Mail
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="email"
               name="email"
-              value={formData.email}
+              placeholder="Your Email"
+              value={form.email}
               onChange={handleChange}
-              className={`w-full bg-transparent border-0 border-b-2 text-white placeholder-gray-400 border-gray-600 focus:outline-none focus:border-blue-500 transition duration-300 py-2 ${
-                errors.email ? "border-red-500" : ""
-              }`}
-              placeholder="john@example.com"
               required
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-white placeholder-gray-400"
             />
           </motion.div>
 
+          {/* Message */}
           <motion.div
-            className="mt-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.5 }}
+            className="relative"
           >
-            <label className="block text-white mb-2">
-              Message <span className="text-red-500">*</span>
-            </label>
+            <MessageSquare
+              className="absolute left-3 top-4 text-gray-400"
+              size={18}
+            />
             <textarea
               name="message"
-              value={formData.message}
+              placeholder="Your Message"
+              rows={5}
+              value={form.message}
               onChange={handleChange}
-              className={`w-full bg-transparent border-0 border-b-2 text-white placeholder-gray-400 border-gray-600 focus:outline-none focus:border-blue-500 transition duration-300 py-2 ${
-                errors.message ? "border-red-500" : ""
-              }`}
-              rows={4}
-              placeholder="Type your message..."
               required
-            ></textarea>
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-white placeholder-gray-400"
+            />
           </motion.div>
 
+          {/* Submit Button */}
           <motion.div
-            className="mt-8 text-center"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.9 }}
+            className="text-center"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
           >
             <button
               type="submit"
-              className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-white px-8 py-2 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isPending}
+              disabled={loading}
+              className="w-full py-3 px-6 bg-gradient-to-r from-indigo-500 to-violet-600 rounded-xl text-white font-semibold shadow-lg hover:shadow-indigo-700/30 transition disabled:opacity-50"
             >
-              {isPending ? "Sending..." : "Submit"}
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </motion.div>
         </form>
-
-        {status && (
-          <motion.p
-            className="text-center mt-6 text-white text-lg font-semibold"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-          >
-            {status}
-          </motion.p>
-        )}
       </motion.div>
-      <ToastContainer position="top-center" autoClose={3000} />
+
+      {/* Toastify container */}
+      <ToastContainer />
     </div>
   );
 }
-// "use client";
-
-// import { useState, ChangeEvent, FormEvent } from "react";
-
-// interface ContactFormData {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   message: string;
-// }
-
-// export default function ContactPage() {
-//   const [form, setForm] = useState<ContactFormData>({
-//     firstName: "",
-//     lastName: "",
-//     email: "",
-//     message: "",
-//   });
-
-//   const [loading, setLoading] = useState(false);
-//   const [resMsg, setResMsg] = useState("");
-
-//   const handleChange = (
-//     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e: FormEvent) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setResMsg("");
-
-//     try {
-//       const res = await fetch("http://localhost:1000/contact", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(form),
-//       });
-
-//       const data = await res.json();
-
-//       if (!res.ok) throw new Error(data.message || "Something went wrong");
-
-//       setResMsg("✅ Message sent successfully!");
-//       setForm({ firstName: "", lastName: "", email: "", message: "" });
-//     } catch (err: any) {
-//       setResMsg("❌ " + err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow">
-//       <h1 className="text-2xl font-bold mb-4 text-center">Contact Us</h1>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <input
-//           name="firstName"
-//           placeholder="First Name"
-//           value={form.firstName}
-//           onChange={handleChange}
-//           required
-//           className="w-full p-2 border-b border-gray-400 focus:outline-none focus:border-black bg-transparent"
-//         />
-//         <input
-//           name="lastName"
-//           placeholder="Last Name"
-//           value={form.lastName}
-//           onChange={handleChange}
-//           required
-//           className="w-full p-2 border-b border-gray-400 focus:outline-none focus:border-black bg-transparent"
-//         />
-//         <input
-//           type="email"
-//           name="email"
-//           placeholder="Email"
-//           value={form.email}
-//           onChange={handleChange}
-//           required
-//           className="w-full p-2 border-b border-gray-400 focus:outline-none focus:border-black bg-transparent"
-//         />
-//         <textarea
-//           name="message"
-//           placeholder="Message"
-//           rows={4}
-//           value={form.message}
-//           onChange={handleChange}
-//           required
-//           className="w-full p-2 border-b border-gray-400 focus:outline-none focus:border-black bg-transparent"
-//         />
-//         <button
-//           type="submit"
-//           disabled={loading}
-//           className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
-//         >
-//           {loading ? "Sending..." : "Send Message"}
-//         </button>
-//         {resMsg && <p className="text-center mt-2">{resMsg}</p>}
-//       </form>
-//     </div>
-//   );
-// }
