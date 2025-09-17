@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaReact,
   FaLaravel,
@@ -38,6 +38,28 @@ const fadeInUp = {
   }),
 };
 
+// Animation variants
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 60,
+    },
+  },
+};
+
 const Projects: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -55,231 +77,218 @@ const Projects: React.FC = () => {
 
   const nextImage = () => {
     if (currentIndex !== null && currentIndex < images.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setSelectedImage(images[currentIndex + 1]);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      setSelectedImage(images[nextIndex]);
     }
   };
 
   const prevImage = () => {
     if (currentIndex !== null && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-      setSelectedImage(images[currentIndex - 1]);
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      setSelectedImage(images[prevIndex]);
     }
   };
 
   return (
     <>
-      {/* Projects Section */}
+      {/* === Projects Section === */}
       <section
-        className="bg-white text-black py-16 px-6 scroll-mt-20"
         id="projects"
+        className="bg-white text-black py-20 px-6 scroll-mt-20"
       >
         <motion.h2
-          className="text-center text-3xl font-bold mb-10"
+          className="text-4xl font-extrabold text-center mb-12 bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text"
           initial="hidden"
           whileInView="visible"
           variants={fadeInUp}
           viewport={{ once: true }}
         >
-          Some Works Carried Out
+          🚀 Some Works Carried Out
         </motion.h2>
 
-        <div className="mx-auto max-w-screen-2xl">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {images.map((src, index) => (
-              <motion.div
-                key={index}
-                className="cursor-pointer group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition relative"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                custom={index * 0.1}
-                onClick={() => handleImageClick(index)}
-              >
-                <Image
-                  src={src}
-                  alt={`Project ${index + 1}`}
-                  width={400}
-                  height={250}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                  <span className="text-white font-semibold">View Project</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-2xl mx-auto">
+          {images.map((src, index) => (
+            <motion.div
+              key={index}
+              className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
+              custom={index * 0.07}
+              onClick={() => handleImageClick(index)}
+            >
+              <Image
+                src={src}
+                alt={`Project ${index + 1}`}
+                width={400}
+                height={250}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition duration-500 ease-in-out"
+              />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                <span className="text-white font-semibold text-lg">
+                  View Project
+                </span>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Modal */}
-        {selectedImage && (
-          <div className="fixed inset-0 bg-black/90 flex justify-center items-center z-50 p-4">
-            <button
-              className="absolute top-6 right-6 text-white text-4xl"
-              onClick={closeModal}
+        {/* Modal Lightbox */}
+        <AnimatePresence>
+          {selectedImage && (
+            <motion.div
+              className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              ×
-            </button>
-            <button
-              className="absolute left-4 text-white text-3xl"
-              onClick={prevImage}
-            >
-              &lt;
-            </button>
-            <Image
-              src={selectedImage}
-              alt="Selected"
-              width={900}
-              height={600}
-              className="rounded-lg shadow-xl max-h-[80vh] object-contain"
-            />
-            <button
-              className="absolute right-4 text-white text-3xl"
-              onClick={nextImage}
-            >
-              &gt;
-            </button>
-          </div>
-        )}
+              <button
+                className="absolute top-6 right-6 text-white text-4xl"
+                onClick={closeModal}
+              >
+                ×
+              </button>
+              <button
+                className="absolute left-4 text-white text-4xl"
+                onClick={prevImage}
+              >
+                ‹
+              </button>
+              <motion.div
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.7, opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <Image
+                  src={selectedImage}
+                  alt="Selected"
+                  width={900}
+                  height={600}
+                  className="rounded-xl shadow-2xl max-h-[80vh] object-contain"
+                />
+              </motion.div>
+              <button
+                className="absolute right-4 text-white text-4xl"
+                onClick={nextImage}
+              >
+                ›
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
-      {/* Experience Section */}
+      {/* === Experience Section === */}
       <section
-        className="bg-gradient-to-b from-black via-gray-900 to-black text-gray-200 py-16 px-6 scroll-mt-20"
         id="experience"
+        className="bg-gradient-to-b from-black via-gray-900 to-black text-gray-200 py-20 px-6 scroll-mt-20"
       >
         <motion.h2
-          className="text-center text-3xl font-bold mb-6"
+          className="text-4xl font-bold text-center mb-6 text-white"
           initial="hidden"
           whileInView="visible"
           variants={fadeInUp}
           viewport={{ once: true }}
         >
-          Experience and Services
+          🎯 Experience and Services
         </motion.h2>
+
         <motion.p
-          className="text-center mb-12"
+          className="text-center text-gray-400 mb-12"
           initial="hidden"
           whileInView="visible"
           variants={fadeInUp}
           custom={0.2}
           viewport={{ once: true }}
         >
-          I have been part of the{" "}
-          <span className="text-blue-400">Stack System Technologies</span> team
+          Contributed to major projects with{" "}
+          <span className="text-blue-400">Stack System Technologies</span>
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-screen-2xl mx-auto">
           {/* Web Dev Card */}
           <motion.div
-            className="bg-gray-900/70 rounded-xl shadow-lg p-6 hover:shadow-xl transition"
+            className="bg-gray-900/80 rounded-2xl p-6 shadow-md hover:shadow-xl transition"
             initial="hidden"
             whileInView="visible"
             variants={fadeInUp}
             custom={0.3}
             viewport={{ once: true }}
+            variants={containerVariants}
           >
             <h3 className="text-2xl font-semibold mb-6 text-blue-400">
               Web Development
             </h3>
-            <div className="grid grid-cols-2 gap-y-4 text-lg">
-              <div className="flex items-center gap-2">
-                <SiJavascript className="text-yellow-400" /> JavaScript
-              </div>
-              <div className="flex items-center gap-2">
-                <SiTypescript className="text-blue-500" /> TypeScript
-              </div>
-              <div className="flex items-center gap-2">
-                <FaReact className="text-cyan-400" /> React
-              </div>
-              <div className="flex items-center gap-2">
-                <FaNode className="text-green-500" /> Node.js
-              </div>
-              <div className="flex items-center gap-2">
-                <SiMongodb className="text-green-400" /> MongoDB
-              </div>
-              <div className="flex items-center gap-2">
-                <FaDatabase className="text-orange-500" /> MySQL
-              </div>
-              <div className="flex items-center gap-2">
-                <FaDocker className="text-blue-400" /> Docker
-              </div>
-              <div className="flex items-center gap-2">
-                <SiKubernetes className="text-blue-600" /> Kubernetes
-              </div>
-              <div className="flex items-center gap-2">
-                <SiJenkins className="text-red-400" /> Jenkins
-              </div>
-              <div className="flex items-center gap-2">
-                <SiSonarqube className="text-blue-300" /> SonarQube
-              </div>
-              <div className="flex items-center gap-2">
-                <SiTerraform className="text-purple-400" /> Terraform
-              </div>
-              <div className="flex items-center gap-2">
-                <TbSeo className="text-pink-400" /> SEO
-              </div>
-              <div className="flex items-center gap-2">
-                <IoRocketSharp className="text-white" /> Optimization
-              </div>
-              <div className="flex items-center gap-2">
-                <FaLaravel className="text-red-600" /> Laravel
-              </div>
-              <div className="flex items-center gap-2">
-                <SiExpress className="text-gray-400" /> Express
-              </div>
-              <div className="flex items-center gap-2">
-                <FaGitAlt className="text-orange-600" /> Git
-              </div>
-              <div className="flex items-center gap-2">
-                <DiRedis className="text-red-600" /> Redis
-              </div>
-              <div className="flex items-center gap-2">
-                <SiApachekafka className="text-yellow-400" /> Kafka
-              </div>
-              <div className="flex items-center gap-2">
-                <FaBootstrap className="text-purple-500" /> Bootstrap
-              </div>
-              <div className="flex items-center gap-2">
-                <SiTailwindcss className="text-blue-400" /> Tailwind
-              </div>
-              <div className="flex items-center gap-2">
-                <RiNextjsFill className="text-white" /> Next.js
-              </div>
-            </div>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-2 gap-y-4 text-lg"
+            >
+              {[
+                [<SiJavascript className="text-yellow-400" />, "JavaScript"],
+                [<SiTypescript className="text-blue-500" />, "TypeScript"],
+                [<FaReact className="text-cyan-400" />, "React"],
+                [<FaNode className="text-green-500" />, "Node.js"],
+                [<SiMongodb className="text-green-400" />, "MongoDB"],
+                [<FaDatabase className="text-orange-500" />, "MySQL"],
+                [<FaDocker className="text-blue-400" />, "Docker"],
+                [<SiKubernetes className="text-blue-600" />, "Kubernetes"],
+                [<SiJenkins className="text-red-400" />, "Jenkins"],
+                [<SiSonarqube className="text-blue-300" />, "SonarQube"],
+                [<SiTerraform className="text-purple-400" />, "Terraform"],
+                [<TbSeo className="text-pink-400" />, "SEO"],
+                [<IoRocketSharp className="text-white" />, "Optimization"],
+                [<FaLaravel className="text-red-600" />, "Laravel"],
+                [<SiExpress className="text-gray-400" />, "Express"],
+                [<FaGitAlt className="text-orange-600" />, "Git"],
+                [<DiRedis className="text-red-600" />, "Redis"],
+                [<SiApachekafka className="text-yellow-400" />, "Kafka"],
+                [<FaBootstrap className="text-purple-500" />, "Bootstrap"],
+                [<SiTailwindcss className="text-blue-400" />, "Tailwind"],
+                [<RiNextjsFill className="text-white" />, "Next.js"],
+              ].map(([icon, label], i) => (
+                <motion.div
+                  variants={itemVariants}
+                  key={i}
+                  className="flex items-center gap-2"
+                >
+                  {icon} {label}
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
 
           {/* Audit Card */}
           <motion.div
-            className="bg-gray-900/70 rounded-xl shadow-lg p-6 hover:shadow-xl transition"
+            className="bg-gray-900/80 rounded-2xl p-6 shadow-md hover:shadow-xl transition"
             initial="hidden"
             whileInView="visible"
             variants={fadeInUp}
             custom={0.4}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-semibold mb-6 text-blue-400">Audit</h3>
-            <ul className="list-disc pl-5 space-y-3 text-lg">
+            <h3 className="text-2xl font-semibold mb-6 text-blue-400">
+              Audit Services
+            </h3>
+            <ul className="list-disc pl-5 space-y-3 text-lg text-gray-300">
               <li>
-                <strong>Usability:</strong> Intuitive navigation for seamless
-                UX.
+                <strong>Usability:</strong> Seamless navigation & UI.
               </li>
               <li>
-                <strong>Accessibility:</strong> Compliance with WCAG for
-                inclusivity.
+                <strong>Accessibility:</strong> WCAG-compliant designs.
               </li>
               <li>
-                <strong>Performance:</strong> Speed, load-time, and SEO
-                optimization.
+                <strong>Performance:</strong> Fast load & SEO optimized.
               </li>
               <li>
-                <strong>Load Balancing:</strong> Efficient server traffic
-                distribution.
+                <strong>Load Balancing:</strong> Efficient request handling.
               </li>
               <li>
-                <strong>Resource Optimization:</strong> Image, script, and
-                caching strategies for efficiency.
+                <strong>Resource Optimization:</strong> Images, caching &
+                scripts.
               </li>
             </ul>
           </motion.div>
